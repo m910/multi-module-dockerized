@@ -1,0 +1,47 @@
+version: '3'
+services:
+  test-mongo:
+    image: mongo
+    network_mode: host
+    hostname: localhost
+    ports:
+      - 27017:27017
+  trackservice:
+    build: trackservice/.
+    restart: always
+    container_name: trackservice
+    network_mode: host
+    hostname: localhost
+    depends_on:
+      - test-mongo
+      - config-server
+      - eureka-server
+    ports:
+      - 8080:8080
+  config-server:
+    build: config-server/.
+    restart: always
+    container_name: config-server
+    network_mode: host
+    hostname: localhost
+
+  eureka-server:
+    build: eureka-server/
+    restart: always
+    container_name: eureka-server
+    network_mode: host
+    hostname: localhost
+    ports:
+      - 8091:8091
+
+  api-gateway-pattern:
+    build: api-gateway-pattern/.
+    restart: always
+    container_name: api-gateway-pattern
+    network_mode: host
+    hostname: localhost
+
+    ports:
+      - 8090:8090
+
+
